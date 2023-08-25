@@ -1,7 +1,7 @@
 import { BASE_URL } from "../utils/constants";
 import { httpClient } from "./httpClient";
 
-export const getAllPokemons = async (limit = 50, offset = 0) => {
+export const getAllPokemons = async (limit = 10, offset = 0) => {
   let url = `${BASE_URL}pokemon?limit=${limit}&offset=${offset}`;
 
   try {
@@ -62,6 +62,18 @@ export const getPokemonByTypes = async (selectedTypes) => {
     const uniquePokemonArray = Array.from(new Set(flattenedResults));
 
     return uniquePokemonArray;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
+
+export const getPokemonByName = async (name) => {
+  let cleanName = name.toLowerCase().replace(/\s+/g, "");
+  let url = `${BASE_URL}pokemon/${cleanName}`;
+  try {
+    const res = await httpClient.get(url);
+    const data = await res.data;
+    return data;
   } catch (error) {
     console.error("Error fetching data:", error);
   }

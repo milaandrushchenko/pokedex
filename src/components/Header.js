@@ -9,6 +9,7 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import CatchingPokemonIcon from "@mui/icons-material/CatchingPokemon";
+import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 
 const pages = [

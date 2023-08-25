@@ -5,12 +5,23 @@ import PokemonList from "./components/Pokemon/PokemonList";
 import FilterBar from "./components/FilterBar";
 import { Container, Grid } from "@mui/material";
 import { getAllTypes } from "./api/typeApi";
+import SearchBar from "./components/SearchBar";
+import {
+  getAllPokemons,
+  getPokemonByName,
+  getPokemonByTypes,
+} from "./api/pokemonApi";
 
 export default function App() {
   const [allTypes, setAllTypes] = useState([]);
 
-  const [allPokemons, setAllPokemons] = useState([]);
+  const [displayedPokemons, setDisplayedPokemons] = React.useState([]);
+
   const [filteredPokemons, setFilteredPokemons] = useState([]);
+
+  const [pokemonNotFound, setPokemonNotFound] = useState(false);
+
+  const [selectedTypes, setSelectedTypes] = useState([]);
 
   // const [allGLobalPokemons, setAllGlobalPokemons] = useState([]);
 
@@ -21,6 +32,53 @@ export default function App() {
   const fetchType = async () => {
     const types = await getAllTypes();
     setAllTypes(types);
+  };
+
+  const fetchPokemons = async (limit = 10, offset = 0) => {
+    setIsLoading(true);
+    setPokemonNotFound(false);
+    setFilteredPokemons([]);
+    try {
+      const pokemons = await getAllPokemons(limit, offset);
+      setDisplayedPokemons(pokemons);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchPokemonByTypes = async () => {
+    setIsLoading(true);
+    try {
+      const pokemons = await getPokemonByTypes(selectedTypes);
+      setFilteredPokemons(pokemons);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchPokemonByName = async (searchTerm) => {
+    setIsLoading(true);
+    try {
+      const pokemon = await getPokemonByName(searchTerm);
+      console.log(pokemon);
+      if (pokemon === undefined) {
+        setPokemonNotFound(true);
+        setFilteredPokemons([]);
+      } else {
+        console.log(pokemon);
+        setPokemonNotFound(false);
+        setFilteredPokemons((prev) => [pokemon]);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setFilteredPokemons([]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -34,30 +92,42 @@ export default function App() {
   return (
     <>
       <Header />
+
       <Container maxWidth="xl" sx={{ marginTop: 5, marginBottom: 5 }}>
-        <Grid container spacing={2}>
+        <Grid container justifyContent="center">
+          <Grid item xs={12} md={4}>
+            <SearchBar
+              fetchPokemonByName={fetchPokemonByName}
+              setShowFilters={setShowFilters}
+              fetchPokemons={fetchPokemons}
+              setSelectedTypes={setSelectedTypes}
+            />
+          </Grid>
+        </Grid>
+        <Grid container spacing={2} justifyContent="center">
           <Grid item xs={showFilters ? 12 : 0} md={showFilters ? 2 : 0}>
             <FilterBar
+              fetchPokemonByTypes={fetchPokemonByTypes}
               types={allTypes}
               showFilters={showFilters}
               toggleFilters={toggleFilters}
-              setFilteredPokemons={setFilteredPokemons}
               isLoading={isLoading}
-              setIsLoading={setIsLoading}
+              selectedTypes={selectedTypes}
+              setSelectedTypes={setSelectedTypes}
             />
           </Grid>
           <Grid item xs={12} md={showFilters ? 10 : 12}>
             <PokemonList
-              pokemons={allPokemons}
+              fetchPokemons={fetchPokemons}
               filteredPokemons={filteredPokemons}
-              setAllPokemons={setAllPokemons}
               toggleFilters={toggleFilters}
               isLoading={isLoading}
-              setIsLoading={setIsLoading}
+              pokemonNotFound={pokemonNotFound}
+              displayedPokemons={displayedPokemons}
+              setDisplayedPokemons={setDisplayedPokemons}
             />
           </Grid>
         </Grid>
-        {/* )} */}
       </Container>
       <Outlet />
     </>

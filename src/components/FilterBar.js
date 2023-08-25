@@ -1,16 +1,15 @@
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { getPokemonByTypes } from "../api/pokemonApi";
+import React, { useEffect } from "react";
 
 export default function FilterBar({
   showFilters,
   types,
-  setFilteredPokemons,
+  setSelectedTypes,
+  selectedTypes,
   isLoading,
   setIsLoading,
+  fetchPokemonByTypes,
 }) {
-  const [selectedTypes, setSelectedTypes] = useState([]);
-
   const handleTypeToggle = (event) => {
     const type = event.target.name;
     setSelectedTypes((prevSelectedTypes) => {
@@ -22,20 +21,8 @@ export default function FilterBar({
     });
   };
 
-  const fetchData = async () => {
-    setIsLoading(true);
-    try {
-      const pokemons = await getPokemonByTypes(selectedTypes);
-      setFilteredPokemons(pokemons);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchData();
+    fetchPokemonByTypes();
   }, [selectedTypes]);
 
   return (
@@ -53,6 +40,7 @@ export default function FilterBar({
               name={type.name}
               checked={selectedTypes.includes(type.name)}
               onChange={handleTypeToggle}
+              disabled={isLoading}
               sx={{
                 textTransform: "capitalize",
               }}
