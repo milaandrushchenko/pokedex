@@ -1,5 +1,5 @@
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
-import React, { useEffect } from "react";
+import React from "react";
 
 export default function FilterBar({
   showFilters,
@@ -7,8 +7,6 @@ export default function FilterBar({
   setSelectedTypes,
   selectedTypes,
   isLoading,
-  setIsLoading,
-  fetchPokemonByTypes,
 }) {
   const handleTypeToggle = (event) => {
     const type = event.target.name;
@@ -20,10 +18,6 @@ export default function FilterBar({
       }
     });
   };
-
-  useEffect(() => {
-    fetchPokemonByTypes();
-  }, [selectedTypes]);
 
   return (
     <>

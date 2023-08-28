@@ -23,6 +23,8 @@ export default function App() {
 
   const [selectedTypes, setSelectedTypes] = useState([]);
 
+  const [searchTerm, setSearchTerm] = useState("");
+
   // const [allGLobalPokemons, setAllGlobalPokemons] = useState([]);
 
   const [showFilters, setShowFilters] = useState(false);
@@ -37,7 +39,7 @@ export default function App() {
   const fetchPokemons = async (limit = 10, offset = 0) => {
     setIsLoading(true);
     setPokemonNotFound(false);
-    setFilteredPokemons([]);
+    // setFilteredPokemons([]);
     try {
       const pokemons = await getAllPokemons(limit, offset);
       setDisplayedPokemons(pokemons);
@@ -62,16 +64,15 @@ export default function App() {
 
   const fetchPokemonByName = async (searchTerm) => {
     setIsLoading(true);
+    setSelectedTypes([]);
     try {
       const pokemon = await getPokemonByName(searchTerm);
-      console.log(pokemon);
       if (pokemon === undefined) {
         setPokemonNotFound(true);
         setFilteredPokemons([]);
       } else {
-        console.log(pokemon);
         setPokemonNotFound(false);
-        setFilteredPokemons((prev) => [pokemon]);
+        setFilteredPokemons([pokemon]);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -89,6 +90,15 @@ export default function App() {
     setShowFilters(!showFilters);
   };
 
+  useEffect(() => {
+    if (selectedTypes.length === 0 && searchTerm.length === 0) {
+      console.log(filteredPokemons);
+      fetchPokemons();
+    } else {
+      fetchPokemonByTypes();
+    }
+  }, [selectedTypes]);
+
   return (
     <>
       <Header />
@@ -100,18 +110,17 @@ export default function App() {
               fetchPokemonByName={fetchPokemonByName}
               setShowFilters={setShowFilters}
               fetchPokemons={fetchPokemons}
-              setSelectedTypes={setSelectedTypes}
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
             />
           </Grid>
         </Grid>
         <Grid container spacing={2} justifyContent="center">
           <Grid item xs={showFilters ? 12 : 0} md={showFilters ? 2 : 0}>
             <FilterBar
-              fetchPokemonByTypes={fetchPokemonByTypes}
               types={allTypes}
               showFilters={showFilters}
               toggleFilters={toggleFilters}
-              isLoading={isLoading}
               selectedTypes={selectedTypes}
               setSelectedTypes={setSelectedTypes}
             />
@@ -129,7 +138,6 @@ export default function App() {
           </Grid>
         </Grid>
       </Container>
-      <Outlet />
     </>
   );
 }

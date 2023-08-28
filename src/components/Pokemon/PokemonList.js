@@ -18,6 +18,7 @@ export default function PokemonList({
   displayedPokemons,
   setDisplayedPokemons,
   fetchPokemons,
+  handleOpenDetails,
 }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -32,6 +33,7 @@ export default function PokemonList({
   };
 
   useEffect(() => {
+    console.log("111");
     if (filteredPokemons.length > 0) {
       setDisplayedPokemons(
         filteredPokemons.slice(
@@ -53,7 +55,6 @@ export default function PokemonList({
       )
     );
   }, [filteredPokemons]);
-
   return (
     <>
       <Grid container alignItems="center">
@@ -90,15 +91,10 @@ export default function PokemonList({
             <div>not found</div>
           ) : (
             displayedPokemons?.map((pokemon, index) => (
-              <Grid item xs={12} sm={4} md={2.4} key={pokemon.id}>
+              <Grid item xs={12} sm={4} md={2.4} key={pokemon.name}>
                 <PokemonCard
-                  name={pokemon.name}
-                  image={
-                    pokemon.sprites.other.dream_world.front_default
-                      ? pokemon.sprites.other.dream_world.front_default
-                      : pokemon.sprites.other["official-artwork"].front_default
-                  }
-                  types={pokemon.types}
+                  pokemon={pokemon}
+                  handleOpenDetails={handleOpenDetails}
                 />
               </Grid>
             ))

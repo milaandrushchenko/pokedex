@@ -1,17 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { TextField, Button, Box } from "@mui/material";
 
 export default function SearchBar({
   setShowFilters,
   fetchPokemons,
-  setSelectedTypes,
+  searchTerm,
+  setSearchTerm,
   fetchPokemonByName,
 }) {
-  const [searchTerm, setSearchTerm] = useState("");
-
   const handleSearch = () => {
     setShowFilters(false);
-    setSelectedTypes([]);
     if (searchTerm.length > 0) {
       fetchPokemonByName(searchTerm);
     } else {
