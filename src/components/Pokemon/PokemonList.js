@@ -44,6 +44,7 @@ export default function PokemonList({
     } else {
       fetchPokemons(rowsPerPage, rowsPerPage * page);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, rowsPerPage]);
 
   useEffect(() => {
@@ -54,6 +55,7 @@ export default function PokemonList({
         page * rowsPerPage + rowsPerPage
       )
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filteredPokemons]);
   return (
     <>
@@ -88,7 +90,13 @@ export default function PokemonList({
       ) : (
         <Grid container justifyContent="center" spacing={{ xs: 2, md: 3 }}>
           {pokemonNotFound ? (
-            <div>not found</div>
+            <Typography
+              variant="h6"
+              color="textSecondary"
+              sx={{ marginTop: 2 }}
+            >
+              Pokemon not found
+            </Typography>
           ) : (
             displayedPokemons?.map((pokemon, index) => (
               <Grid item xs={12} sm={4} md={2.4} key={pokemon.name}>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Header from "./components/Header";
-import { Outlet } from "react-router-dom";
 import PokemonList from "./components/Pokemon/PokemonList";
 import FilterBar from "./components/FilterBar";
 import { Container, Grid } from "@mui/material";
@@ -92,11 +91,11 @@ export default function App() {
 
   useEffect(() => {
     if (selectedTypes.length === 0 && searchTerm.length === 0) {
-      console.log(filteredPokemons);
       fetchPokemons();
-    } else {
+    } else if (selectedTypes.length > 0 && searchTerm.length === 0) {
       fetchPokemonByTypes();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTypes]);
 
   return (
@@ -123,6 +122,7 @@ export default function App() {
               toggleFilters={toggleFilters}
               selectedTypes={selectedTypes}
               setSelectedTypes={setSelectedTypes}
+              setSearchTerm={setSearchTerm}
             />
           </Grid>
           <Grid item xs={12} md={showFilters ? 10 : 12}>

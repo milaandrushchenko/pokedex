@@ -7,8 +7,10 @@ export default function FilterBar({
   setSelectedTypes,
   selectedTypes,
   isLoading,
+  setSearchTerm,
 }) {
   const handleTypeToggle = (event) => {
+    setSearchTerm("");
     const type = event.target.name;
     setSelectedTypes((prevSelectedTypes) => {
       if (prevSelectedTypes.includes(type)) {
