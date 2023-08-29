@@ -33,7 +33,6 @@ export default function PokemonList({
   };
 
   useEffect(() => {
-    console.log("111");
     if (filteredPokemons.length > 0) {
       setDisplayedPokemons(
         filteredPokemons.slice(
@@ -48,13 +47,15 @@ export default function PokemonList({
   }, [page, rowsPerPage]);
 
   useEffect(() => {
-    setPage(0);
-    setDisplayedPokemons(
-      filteredPokemons.slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      )
-    );
+    if (filteredPokemons.length) {
+      setPage(0);
+      setDisplayedPokemons(
+        filteredPokemons.slice(
+          page * rowsPerPage,
+          page * rowsPerPage + rowsPerPage
+        )
+      );
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filteredPokemons]);
   return (

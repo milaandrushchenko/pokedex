@@ -38,7 +38,7 @@ export default function App() {
   const fetchPokemons = async (limit = 10, offset = 0) => {
     setIsLoading(true);
     setPokemonNotFound(false);
-    // setFilteredPokemons([]);
+    setFilteredPokemons([]);
     try {
       const pokemons = await getAllPokemons(limit, offset);
       setDisplayedPokemons(pokemons);
@@ -51,6 +51,7 @@ export default function App() {
 
   const fetchPokemonByTypes = async () => {
     setIsLoading(true);
+    setPokemonNotFound(false);
     try {
       const pokemons = await getPokemonByTypes(selectedTypes);
       setFilteredPokemons(pokemons);
@@ -119,7 +120,7 @@ export default function App() {
             <FilterBar
               types={allTypes}
               showFilters={showFilters}
-              toggleFilters={toggleFilters}
+              isLoading={isLoading}
               selectedTypes={selectedTypes}
               setSelectedTypes={setSelectedTypes}
               setSearchTerm={setSearchTerm}

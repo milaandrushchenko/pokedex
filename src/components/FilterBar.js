@@ -20,6 +20,7 @@ export default function FilterBar({
       }
     });
   };
+  console.log(isLoading);
 
   return (
     <>
